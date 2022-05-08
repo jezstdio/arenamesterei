@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+//colors
+$gray-16: #292929;
+$gray-48: #7A7A7A;
+
+$primary-48: #801ED7;
+
+$secondary-48: #F0B707;
+
+$unsafe-48: #D71D74;
+
+$white: #FFFFFF;
+
+html, body {
+    background-color: $gray-16;
+    color: $white;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+button, .btn-like {
+    border-radius: 8px;
+    text-align: center;
+    padding: 12px;
+    width: 100%;
+    min-width: 240px;
+
+    &.secondary-bg {
+        background-color: $secondary-48;
+        color: $gray-16;
+    }
+
+    &.secondary {
+        background-color: transparent;
+        color: $secondary-48;
+    }
+
+    &.unsafe {
+        background-color: transparent;
+        color: $unsafe-48;
+    }
+}
+
+.btn-like {
+    background-color: $primary-48;
+
+    + input {
+        max-width: 48px;
+        min-width: auto;
+        width: 48px;
+    }
+}
+
+.btn-group-container {
+    &.single-element {
+        .btn-group {
+            &:nth-child(odd) {
+                :nth-child(1) {
+                    border-radius: 2px 8px 8px 2px;
+                }
+        
+                :nth-child(2) {
+                    border-radius: 8px 2px 2px 8px;
+                }
+
+                @media (min-width: 768px) {
+                    :nth-child(1) {
+                        order: 1;
+                    }
+            
+                    :nth-child(2) {
+                        order: 0;
+                    }
+                }
+            }
+        }
+    }
+    @media (min-width: 1280px) {
+        &:nth-child(2n) {
+            margin-right: 16px;
+        }        
+        &:nth-child(2n + 1) {
+            margin-right: 0px;
+        }
+    }
+}
+
+.btn-group {
+    input {
+        &:focus { border-color: $secondary-48; }
+    }
+    &:nth-child(even) {
+        :nth-child(1) {
+            border-radius: 2px 2px 8px 2px;
+        }
+
+        :nth-child(2) {
+            border-radius: 8px 2px 2px 8px;
+            margin-right: 8px;
+        }
+    }
+
+    &:nth-child(odd) {
+        :nth-child(1) {
+            border-radius: 2px 8px 2px 2px;
+        }
+
+        :nth-child(2) {
+            border-radius: 8px 2px 2px 8px;
+            margin-right: 8px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        &:nth-child(even) {
+            :nth-child(1) {
+                border-radius: 2px 8px 8px 2px;
+                order: 1;
+            }
+    
+            :nth-child(2) {
+                border-radius: 2px;
+                margin-right: 8px;
+                order: 0;
+            }
+        }
+
+        &:nth-child(odd) {
+            :nth-child(1) {
+                border-radius: 8px 2px 2px 8px;
+                order: 0;
+                margin-right: 8px;
+            }
+    
+            :nth-child(2) {
+                border-radius: 2px;
+                margin-right: 8px;
+                order: 1;
+            }
+        }
+    }
+}
+
+input {
+    background-color: transparent;
+    border: 2px solid $primary-48;
+    border-radius: 8px;
+    color: $white;
+    text-align: center;
+    padding: 12px;
+    width: 100%;
+    min-width: 240px;
+
+    &.filled {
+        background-color: $primary-48;
+
+        &:focus { background-color: transparent; }
+    }
+}
+
+.bg-color-secondary-48 { background-color: $secondary-48 }
+.text-color-gray-48 { color: $gray-48 }
+
+.width-48px { width: 48px; }
+
+@media (min-width: 768px) {
+    .width-auto--d { width: auto !important }
+}
+
+@media (min-width: 1280px) {
+    .width-50--ld { width: 50% !important; }
+    .width-50--8--ld { width: calc(50% - 8px) !important; }
+}
