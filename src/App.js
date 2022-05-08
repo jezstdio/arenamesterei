@@ -268,6 +268,8 @@ function ScoringInputs(props) {
     <label className="flex row btn-group margin-b-8--m width-100">
       <div ref={inputBtn} className="order-1 btn-like">{props.players[props.position].name}</div>
       <input className="order-0" value={score}
+        maxLength="2"
+        inputMode="numeric"
         placeholder={0}
         onChange={e => {
           setScore(e.target.value);
