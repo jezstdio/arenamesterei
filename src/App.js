@@ -218,7 +218,6 @@ function TheGame(props) {
     loaderStatusValuePosition.current.style.right = `-${loaderStatusValuePosition.current.clientWidth / 2}px`;
   }
 
-  //useEffect(fixLoaderPosition, [currentRound]);
   useEffect(setLoaderSize, [currentRound]);
   useEffect(generateRound, [currentRound]);
 
@@ -239,19 +238,19 @@ function TheGame(props) {
         </div>
       </div>
       { matches.length > 0 && matches }
-      <div className="flex--d justify-between row margin-t-40">
+      <div className={`flex--d ${props.rounds !== currentRound ? "justify-between" : "justify-end"} row margin-t-40`.trim()}>
         <button className="secondary-bg order-1--d margin-b-16 width-auto--d"
           onClick={e => {
             setMatches([]);
             setCurrentRound(currentRound + 1);
           }}
-        >Következő forduló</button>
-        <button className="unsafe order-0--d margin-b-16 width-auto--d"
+        >{ `${props.rounds !== currentRound ? "Következő forduló" : "Végeredmény" }` }</button>
+        { props.rounds !== currentRound && <button className="unsafe order-0--d margin-b-16 width-auto--d"
           onClick={e => {
             props.setShowRounds(false);
             props.setShowRanks(true);
           }}
-        >Verseny leállítása</button>
+        >Verseny leállítása</button>}
       </div>
     </section>
   )
