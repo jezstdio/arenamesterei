@@ -58,7 +58,7 @@ function Preparation(props) {
               props.setRounds(e.target.value);
             }}
           />
-          <p className="text-color-gray-48">írj be 0-át a max körökhöz</p>
+          <p className="text-color-gray-48">írj be 0-át a max fordulókhoz</p>
         </div>
       </section>
       <section className="flex column center--m start--d">
