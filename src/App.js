@@ -51,7 +51,10 @@ function Preparation(props) {
       <section className="margin-b-48 flex column center--m start--d">
         <span className="block font-size-32 font-weight-bold margin-b-16">Fordulók száma</span>
         <div className="flex column center--m start--d width-100--m">
-          <input className="margin-b-8" type="number" value={props.rounds === "0" ? calculateRounds() : props.rounds}
+          <input className="margin-b-8" type="number" value={
+            props.rounds === "0" ? calculateRounds() : 
+              props.rounds > calculateRounds() ? calculateRounds() : props.rounds
+          }
             onFocus={e => e.target.select()}
             onChange={e => {
               !modifiedRounds && setModifiedRounds(true);
