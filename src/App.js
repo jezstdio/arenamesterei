@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [rounds, setRounds] = useState(0);
 
   const [showSettings, setShowSettings] = useState(true);
   const [showRounds, setShowRounds] = useState(false);
@@ -9,8 +10,8 @@ function App() {
 
   return (
     <div className="App padding-x-24 padding-y-48">
-      { showSettings && <Preparation players={players} setPlayers={setPlayers} setShowSettings={setShowSettings} setShowRounds={setShowRounds} /> }
-      { showRounds && <TheGame players={players} setPlayers={setPlayers} setShowRounds={setShowRounds} setShowRanks={setShowRanks} /> }
+      { showSettings && <Preparation players={players} rounds={rounds} setRounds={setRounds} setPlayers={setPlayers} setShowSettings={setShowSettings} setShowRounds={setShowRounds} /> }
+      { showRounds && <TheGame players={players} rounds={rounds} setRounds={setRounds} setPlayers={setPlayers} setShowRounds={setShowRounds} setShowRanks={setShowRanks} /> }
       { showRanks && <Ranks players={players} /> }
     </div>
   );
@@ -25,7 +26,6 @@ function Preparation(props) {
   }
 
   const [newPlayer, setNewPlayer] = useState(defaultNewPlayer);
-  const [rounds, setRounds] = useState(0);
   const [modifiedRounds, setModifiedRounds] = useState(false);
 
   function findNameInObject() {
@@ -38,31 +38,33 @@ function Preparation(props) {
       .map(({ value }) => value);
   }
 
+  function calculateRounds() {
+    return ((((props.players.length * props.players.length) - (props.players.length)) / 2))
+    / ((props.players.length - (props.players.length % 2 === 0 ? 0 : 1)) / 2) || "0"
+  }
+
   useEffect(() => {
-    !modifiedRounds && setRounds(((props.players.length * props.players.length) - props.players.length) / 2)
-  }, [props.players]);
+    !modifiedRounds && props.setRounds(calculateRounds) }, [props.players]);
 
   return (
     <React.Fragment>
-      { /*
-      <section className="margin-b-48 flex column center">
+      <section className="margin-b-48 flex column center--m start--d">
         <span className="block font-size-32 font-weight-bold margin-b-16">Fordulók száma</span>
-        <div className="flex column center width-100">
-          <input className="margin-b-8" type="number" value={rounds}
+        <div className="flex column center--m start--d width-100--m">
+          <input className="margin-b-8" type="number" value={props.rounds === "0" ? calculateRounds() : props.rounds}
             onChange={e => {
               !modifiedRounds && setModifiedRounds(true);
-              setRounds(e.target.value);
+              props.setRounds(e.target.value);
             }}
           />
           <p className="text-color-gray-48">állítsd 0-ra ha nem akarsz foglalkozni vele</p>
         </div>
       </section>
-      */ }
       <section className="flex column center--m start--d">
         <span className="block font-size-32 font-weight-bold margin-b-16">Játékosok</span>
         <div className="flex--d row start width-100 wrap">
           <div className="margin-b-16 margin-r-16--d margin-t-24--d">
-            <button className="secondary-bg margin-t-2--d"
+            <button className="secondary-bg margin-t-2--d" disabled={props.players.length < 1 && props.rounds < 1}
               onClick={e => {
                 props.setPlayers(shuffleArray(props.players));
                 props.setShowSettings(false);
@@ -125,6 +127,10 @@ function TheGame(props) {
   const [currentRound, setCurrentRound] = useState(1);
   const [matches, setMatches] = useState([]);
 
+  const loader = React.createRef();
+  const loaderStatus = React.createRef();
+  const loaderStatusValuePosition = React.createRef();
+
   function generateRound() {
     const tempMatches = [];
     const tempPlayers = [...props.players];
@@ -170,7 +176,7 @@ function TheGame(props) {
       }
     }
 
-    if (tempMatches.length > 0) {
+    if (tempMatches.length > 0 && !(props.rounds < currentRound)) {
       const min = Math.min(...tempPlayers.map(player => player.playedWith.length));
       const max = Math.max(...tempPlayers.map(player => player.playedWith.length));
   
@@ -204,11 +210,34 @@ function TheGame(props) {
     }
   }
 
+  function setLoaderSize() {
+    loaderStatus.current.style.width = `${((document.body.clientWidth / props.rounds) * currentRound) - (document.body.clientWidth - loader.current.clientWidth)}px`;
+  }
+
+  function fixLoaderPosition() {
+    loaderStatusValuePosition.current.style.right = `-${loaderStatusValuePosition.current.clientWidth / 2}px`;
+  }
+
+  //useEffect(fixLoaderPosition, [currentRound]);
+  useEffect(setLoaderSize, [currentRound]);
   useEffect(generateRound, [currentRound]);
+
+  window.onresize = setLoaderSize;
+  window.onresize = fixLoaderPosition;
 
   return (
     <section>
-      <span className="block font-size-32 font-weight-bold margin-b-16">{currentRound}. forduló</span>
+      <div className="flex--d row center-start">
+        <span className="block font-size-32 font-weight-bold margin-b-16 margin-r-24">{currentRound}.&nbsp;forduló</span>
+        <div ref={loader} className="loader margin-b-16">
+          <div ref={loaderStatus} className="loader-status">
+            <div ref={loaderStatusValuePosition} className="absolute flex row center">
+              <span className="absolute right-8">{currentRound}</span>
+              <span className="absolute left-8 text-color-white loader-max">{props.rounds}</span>
+            </div>
+          </div>
+        </div>
+      </div>
       { matches.length > 0 && matches }
       <div className="flex--d justify-between row margin-t-40">
         <button className="secondary-bg order-1--d margin-b-16 width-auto--d"
