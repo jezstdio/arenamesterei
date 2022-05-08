@@ -52,19 +52,21 @@ function Preparation(props) {
         <span className="block font-size-32 font-weight-bold margin-b-16">Fordulók száma</span>
         <div className="flex column center--m start--d width-100--m">
           <input className="margin-b-8" type="number" value={props.rounds === "0" ? calculateRounds() : props.rounds}
+            onFocus={e => e.target.select()}
             onChange={e => {
               !modifiedRounds && setModifiedRounds(true);
               props.setRounds(e.target.value);
             }}
           />
-          <p className="text-color-gray-48">állítsd 0-ra ha nem akarsz foglalkozni vele</p>
+          <p className="text-color-gray-48">írj be 0-át a max körökhöz</p>
         </div>
       </section>
       <section className="flex column center--m start--d">
         <span className="block font-size-32 font-weight-bold margin-b-16">Játékosok</span>
         <div className="flex--d row start width-100 wrap">
           <div className="margin-b-16 margin-r-16--d margin-t-24--d">
-            <button className="secondary-bg margin-t-2--d" disabled={props.players.length < 1 && props.rounds < 1}
+            { console.log(props.rounds) }
+            <button className="secondary-bg margin-t-2--d" disabled={props.players.length < 1 || !props.rounds}
               onClick={e => {
                 props.setPlayers(shuffleArray(props.players));
                 props.setShowSettings(false);
